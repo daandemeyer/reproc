@@ -34,7 +34,7 @@ const char *error_string(int error)
 
     return result;
 #else
-    // Pure POSIX fallback (MSVC / unknown compilers)
+    // Pure POSIX fallback (unknown compilers)
     int r = strerror_r(abs(error), string, ARRAY_SIZE(string));
     if (r != 0) {
         return "Failed to retrieve error string";
