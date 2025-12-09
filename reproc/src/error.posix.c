@@ -23,13 +23,22 @@ const char *error_string(int error)
 {
   static THREAD_LOCAL char string[ERROR_STRING_MAX_SIZE];
 
-  if(error == INT_MIN)
-    return "Failed to retrieve error string";
+  #if defined(__GNUC__) || defined(__clang__)
+    __auto_type r = strerror_r(abs(error), string, ARRAY_SIZE(string));
 
-  int r = strerror_r(abs(error), string, ARRAY_SIZE(string));
-  if (r != 0) {
-    return "Failed to retrieve error string";
-  }
+    const char *result =
+        _Generic((r),
+                 char *: r,
+                 default: ((r == 0) ? string : "Failed to retrieve error string")
+        );
 
-  return string;
-}
+    return result;
+#else
+    // Pure POSIX fallback (MSVC / unknown compilers)
+    int r = strerror_r(abs(error), string, ARRAY_SIZE(string));
+    if (r != 0) {
+        return "Failed to retrieve error string";
+    }
+    return string;
+#endif
+}                                                                                                                                                      ~            
