@@ -41,4 +41,4 @@ const char *error_string(int error)
     }
     return string;
 #endif
-}                                                                                                                                                      ~            
+}
