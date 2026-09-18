@@ -127,6 +127,7 @@ struct options {
     clone.timeout = other.timeout;
     clone.deadline = other.deadline;
     clone.input = other.input;
+    clone.nonblocking = other.nonblocking;
 
     return clone;
   }
