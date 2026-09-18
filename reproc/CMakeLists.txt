@@ -51,6 +51,13 @@ reproc_test(reproc pid C)
 
 if(UNIX)
   reproc_test(reproc fork C)
+  reproc_test(reproc setup C)
+  if(TARGET reproc-test-setup)
+    target_compile_definitions(reproc-test-setup PRIVATE
+      RESOURCE_DIRECTORY="${CMAKE_CURRENT_BINARY_DIR}/resources"
+    )
+    add_dependencies(reproc-test-setup reproc-resource-io)
+  endif()
 endif()
 
 reproc_example(reproc drain C)

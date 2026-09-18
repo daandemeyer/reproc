@@ -162,6 +162,13 @@ typedef enum {
   REPROC_ENV_EMPTY,
 } REPROC_ENV;
 
+/*! Used by `setup` in `reproc_options` to run code in the child process before
+`exec`. */
+typedef struct reproc_setup {
+  int (*function)(void *context);
+  void *context;
+} reproc_setup;
+
 typedef struct reproc_options {
   /*!
   `working_directory` specifies the working directory for the child process. If
@@ -288,6 +295,25 @@ typedef struct reproc_options {
   When `fork` is enabled. `argv` must be `NULL` when calling `reproc_start`.
   */
   bool fork;
+  /*!
+  This option can only be used on POSIX systems. If `function` is set on
+  Windows, an error will be returned.
+
+  If `function` is set, it is called in the child process after reproc has
+  redirected the standard streams, applied the working directory and
+  environment, and prepared the exit handle, immediately before `exec`. Return
+  0 on success. On failure, return a negated errno value which is then returned
+  from `reproc_start`.
+
+  `setup` cannot be used together with `fork`.
+
+  If the parent process is multithreaded, the callback must be
+  async-signal-safe. It must not close file descriptors it did not open. The
+  extra inherited exit handle and reproc's internal error pipe are still open.
+  Closing the error pipe drops setup-failure reporting. Do not use stdio
+  (`printf`, `fwrite`). Use `write`.
+  */
+  reproc_setup setup;
   /*!
   Put pipes created by reproc in nonblocking mode. This makes `reproc_read` and
   `reproc_write` nonblocking operations. If needed, use `reproc_poll` to wait

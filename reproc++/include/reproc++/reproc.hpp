@@ -114,6 +114,12 @@ struct options {
   class input input;
   bool nonblocking = false;
 
+  /*! See `reproc_options.setup`. */
+  struct {
+    int (*function)(void *context);
+    void *context;
+  } setup = {};
+
   /*! Make a shallow copy of `options`. */
   static options clone(const options &other)
   {
@@ -127,6 +133,7 @@ struct options {
     clone.timeout = other.timeout;
     clone.deadline = other.deadline;
     clone.input = other.input;
+    clone.setup = other.setup;
 
     return clone;
   }

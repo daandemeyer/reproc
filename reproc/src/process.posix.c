@@ -443,6 +443,14 @@ int process_start(pid_t *process,
     // `environ` is carried over calls to `exec`.
     environ = env;
 
+    if (options.setup != NULL) {
+      r = options.setup(options.setup_context);
+      if (r < 0) {
+        errno = -r;
+        goto child;
+      }
+    }
+
     if (argv != NULL) {
       ASSERT(program);
 

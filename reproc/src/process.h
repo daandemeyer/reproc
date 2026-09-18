@@ -34,6 +34,9 @@ struct process_options {
     handle_type err;
     handle_type exit;
   } handle;
+  // Called in the child before `exec` when non-NULL.
+  int (*setup)(void *context);
+  void *setup_context;
 };
 
 // Spawns a child process that executes the command stored in `argv`.

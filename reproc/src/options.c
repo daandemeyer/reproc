@@ -121,8 +121,13 @@ int parse_options(reproc_options *options, const char *const *argv)
     ASSERT_EINVAL(options->input.data != NULL);
   }
 
+#if defined(_WIN32)
+  ASSERT_EINVAL(options->setup.function == NULL);
+#endif
+
   if (options->fork) {
     ASSERT_EINVAL(argv == NULL);
+    ASSERT_EINVAL(options->setup.function == NULL);
   } else {
     ASSERT_EINVAL(argv != NULL && argv[0] != NULL);
   }

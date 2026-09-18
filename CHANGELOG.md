@@ -1,5 +1,13 @@
 # Changelog
 
+## 15.Y.Z
+
+- Added (POSIX only) `reproc_options.setup` / `reproc::options::setup`. If
+  `setup.function` is set, it is called in the child process immediately before
+  `exec`. The function should return 0 on success or a negated errno value on
+  failure. If `function` is set on Windows, an error is returned. Cannot be
+  combined with `fork`.
+
 ## 14.2.4
 
 - Bugfix: Fix a memory leak in `reproc_start()` on Windows (thanks @AokiYuune).

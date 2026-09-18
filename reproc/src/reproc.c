@@ -217,7 +217,9 @@ int reproc_start(reproc_t *process,
     .handle = { .in = child.in,
                 .out = child.out,
                 .err = child.err,
-                .exit = (handle_type) child.exit }
+                .exit = (handle_type) child.exit },
+    .setup = options.setup.function,
+    .setup_context = options.setup.context
   };
 
   r = process_start(&process->handle, argv, process_options);
