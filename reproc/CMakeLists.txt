@@ -1,7 +1,9 @@
 if(WIN32)
   set(REPROC_WINSOCK_LIBRARY ws2_32)
+  set(REPROC_PLATFORM_PKGCONFIG_LIBRARY -lws2_32)
 elseif(CMAKE_SYSTEM_NAME MATCHES Linux)
   set(REPROC_RT_LIBRARY rt) # clock_gettime
+  set(REPROC_PLATFORM_PKGCONFIG_LIBRARY -lrt)
 endif()
 
 reproc_library(reproc C)
