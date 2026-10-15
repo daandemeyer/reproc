@@ -246,9 +246,9 @@ typedef struct reproc_options {
   */
   reproc_stop_actions stop;
   /*!
-  Maximum allowed duration in milliseconds the process is allowed to run in
-  milliseconds. If the deadline is exceeded, Any ongoing and future calls to
-  `reproc_poll` return `REPROC_ETIMEDOUT`.
+  Maximum allowed duration in milliseconds the process is allowed to run.
+  If the deadline is exceeded, ongoing and future calls to `reproc_poll`
+  report `REPROC_EVENT_DEADLINE` in the process's event source.
 
   Note that only `reproc_poll` takes the deadline into account. More
   specifically, if the `nonblocking` option is not enabled, `reproc_read` and
@@ -473,10 +473,11 @@ Wait 10 seconds for the child process to exit on its own before sending
 the child process to exit.
 
 ```c
-REPROC_ERROR error = reproc_stop(process,
-                                 REPROC_STOP_WAIT, 10000,
-                                 REPROC_STOP_TERMINATE, 5000,
-                                 REPROC_STOP_NOOP, 0);
+int status = reproc_stop(process, (reproc_stop_actions) {
+  { REPROC_STOP_WAIT, 10000 },
+  { REPROC_STOP_TERMINATE, 5000 },
+  { REPROC_STOP_NOOP, 0 }
+});
 ```
 
 Call `reproc_wait`, `reproc_terminate` and `reproc_kill` directly if you need
