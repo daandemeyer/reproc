@@ -310,6 +310,16 @@ function(reproc_library TARGET LANGUAGE)
     # pkg-config
 
     if(REPROC_INSTALL_PKGCONFIG)
+      set(REPROC_PKGCONFIG_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}")
+      if(NOT IS_ABSOLUTE "${REPROC_PKGCONFIG_INCLUDEDIR}")
+        set(REPROC_PKGCONFIG_INCLUDEDIR "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+      endif()
+
+      set(REPROC_PKGCONFIG_LIBDIR "${CMAKE_INSTALL_LIBDIR}")
+      if(NOT IS_ABSOLUTE "${REPROC_PKGCONFIG_LIBDIR}")
+        set(REPROC_PKGCONFIG_LIBDIR "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+      endif()
+
       configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET}.pc.in
         ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.pc
